@@ -281,10 +281,12 @@ class Mysql
         }
 
         // Create connection
-        $this->link = new mysqli('localhost', 'root', $this->getRootPassword());
+        $this->link = new mysqli('127.0.0.1', 'root', $this->getRootPassword());
 
         // Check connection
         if ($this->link->connect_error) {
+            var_dump($this->link->connect_error);
+            die;
             warning('Failed to connect to database');
 
             return false;

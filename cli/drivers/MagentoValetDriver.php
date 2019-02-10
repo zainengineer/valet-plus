@@ -33,11 +33,11 @@ class MagentoValetDriver extends BasicValetDriver
         }
 
         info('Setting base url...');
-        $devtools->cli->quietlyAsUser('n98-magerun config:set web/unsecure/base_url ' . $url . '/');
-        $devtools->cli->quietlyAsUser('n98-magerun config:set web/secure/base_url ' . $url . '/');
+        $devtools->cli->quietlyAsUser('m1-n98 config:set web/unsecure/base_url ' . $url . '/');
+        $devtools->cli->quietlyAsUser('m1-n98 config:set web/secure/base_url ' . $url . '/');
 
         info('Flushing cache...');
-        $devtools->cli->quietlyAsUser('n98-magerun cache:flush');
+        $devtools->cli->quietlyAsUser('m1-n98 cache:flush');
 
         info('Configured Magento');
     }
