@@ -71,7 +71,14 @@ if(!$valetSitePath) {
     }
 
     $valetSitePath = realpath($valetSitePath);
-
+    $publicPath = $valetSitePath . '/public';
+    if (file_exists($publicPath . '/pub/index.php') &&
+        file_exists($publicPath . '/bin/magento')){
+        $valetSitePath = $publicPath;
+    }
+    if (is_dir($publicPath.'/app/code/core/Mage')){
+        $valetSitePath = $publicPath;
+    }
     apcu_add('valet_site_path'.$siteName, $valetSitePath, 3600);
 }
 
