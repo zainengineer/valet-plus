@@ -2,6 +2,7 @@
 
 class Magento2ValetDriver extends ValetDriver
 {
+//    protected $_customConfigCache= [];
     public function configure($devtools, $url) {
         info('Configuring Magento 2...');
         $devtools->cli->quietlyAsUser('chmod +x bin/magento');
@@ -56,7 +57,17 @@ class Magento2ValetDriver extends ValetDriver
     }
 
     public function envExists($sitePath) {
-        return file_exists($sitePath.'/app/etc/env.php');
+        $fullPath = $sitePath.'/app/etc/env.php';
+        $fileExists= file_exists($fullPath);
+        if (!$fileExists){
+            if (is_link($fullPath)){
+                $target = readlink($fullPath);
+                $message = "$fullPath target $target does not exist";
+                echo "$message\n<br/>";
+                throw new \Exception($message);
+            }
+        }
+        return $fileExists;
     }
 
     public function moduleConfigExists($sitePath) {
@@ -67,6 +78,20 @@ class Magento2ValetDriver extends ValetDriver
         return $this->envExists($sitePath) && $this->moduleConfigExists($sitePath);
     }
 
+//    public function getConfig($sitePath)
+//    {
+//        if (!isset($this->_customConfigCache[$sitePath]) &&
+//            ($path = $sitePath . '/valet_plus_z.json')
+//            && file_exists($path)
+//            && ($contents = @file_get_contents($path))
+//            && ($decoded = @json_decode($contents, true))) {
+//            $this->_customConfigCache[$sitePath] = $decoded;
+//        }
+//        else {
+//            $this->_customConfigCache[$sitePath] = [];
+//        }
+//        return $this->_customConfigCache[$sitePath];
+//    }
     /**
      * Determine if the incoming request is for a static file.
      *
@@ -79,7 +104,34 @@ class Magento2ValetDriver extends ValetDriver
     {
         $isMagentoStatic = false;
         $resource = $uri;
-        
+        //not using it because implemented react proxy
+
+//        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+//            /**
+//             * also need to modify  /usr/local//etc/nginx/valet/valet.conf
+//             *
+//             *  location /41c270e4-5535-4daa-b23e-c269744c2f45/ {
+//            internal;
+//
+//            #add this line
+//            add_header Access-Control-Allow-Origin *;
+//             */
+//            $config = $this->getConfig($sitePath);
+//            if (isset($config['CORS'])){
+////                $origin = "http://localhost:3000";
+//                $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+//                header('Access-Control-Allow-Origin: ' . $origin);
+////                header("Access-Control-Allow-Origin: *");
+////                exit(0);
+//                if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+//                    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+//                if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+////                    header("Access-Control-Allow-Headers:{$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+//                    header("Access-Control-Allow-Headers:X-Requested-With");
+////                var_dump($_SERVER);
+//                exit(0);
+//            }
+//        }
         if(strpos($uri,'/errors') === 0 && file_exists($sitePath.'/pub'.$uri)) {
             return $sitePath.'/pub'.$uri;
         }
