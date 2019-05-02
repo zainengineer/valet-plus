@@ -79,6 +79,10 @@ if(!$valetSitePath) {
     if (is_dir($publicPath.'/app/code/core/Mage')){
         $valetSitePath = $publicPath;
     }
+    if (file_exists($publicPath.'/public/index.php') &&
+    file_exists($publicPath .'/artisan')){
+        $valetSitePath = $publicPath;
+    }
     apcu_add('valet_site_path'.$siteName, $valetSitePath, 3600);
 }
 
