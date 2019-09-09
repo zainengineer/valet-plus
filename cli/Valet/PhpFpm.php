@@ -304,7 +304,7 @@ class PhpFpm
             }
         }
 
-        throw new DomainException("Unable to determine linked PHP.");
+        throw new DomainException("Unable to determine linked PHP. might need to use something like: brew link valet-php@7.2 --force");
     }
 
     /**
